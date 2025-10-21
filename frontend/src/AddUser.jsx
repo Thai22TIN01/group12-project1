@@ -8,10 +8,15 @@ function AddUser() {
   // Gọi API POST để thêm user
   const addUser = async () => {
     if (!name || !email) return alert("Vui lòng nhập đủ thông tin!");
-    await axios.post("http://localhost:3000/api/users", { name, email });
-    alert("✅ Thêm user thành công!");
-    setName("");
-    setEmail("");
+    try {
+      await axios.post("http://localhost:5000/api/users", { name, email });
+      alert("✅ Thêm user thành công!");
+      setName("");
+      setEmail("");
+    } catch (error) {
+      console.error("❌ Lỗi khi thêm user:", error);
+      alert("Không thể thêm user, vui lòng kiểm tra server!");
+    }
   };
 
   return (
