@@ -1,11 +1,9 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { getUsers, addUser } = require('../controllers/userController');
+const { getUsers, addUser } = require("../controllers/userController");
 
-// GET: Lấy danh sách user
-router.get('/users', getUsers);
-
-// POST: Thêm user mới
-router.post('/users', addUser);
+// ✅ Các route API cơ bản
+router.get("/", getUsers);     // GET /api/users
+router.post("/", addUser);     // POST /api/users
 
 module.exports = router;

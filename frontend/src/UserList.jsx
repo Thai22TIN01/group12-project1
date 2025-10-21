@@ -6,8 +6,12 @@ function UserList() {
 
   // Gọi API GET để lấy danh sách user
   const fetchUsers = async () => {
-    const res = await axios.get("http://localhost:3000/api/users");
-    setUsers(res.data);
+    try {
+      const res = await axios.get("http://localhost:5000/api/users");
+      setUsers(res.data);
+    } catch (err) {
+      console.error("❌ Lỗi khi lấy danh sách user:", err);
+    }
   };
 
   useEffect(() => {
@@ -19,7 +23,8 @@ function UserList() {
       <h2>📋 Danh sách người dùng</h2>
       <ul>
         {users.map((u) => (
-          <li key={u.id}>
+          // ⚠️ MongoDB dùng "_id" chứ không phải "id"
+          <li key={u._id}>
             {u.name} - {u.email}
           </li>
         ))}
