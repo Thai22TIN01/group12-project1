@@ -1,13 +1,11 @@
 const express = require('express');
-const app = express();
+const userRoutes = require('./routes/userRoutes');
 
-// Middleware cho phép backend đọc dữ liệu JSON
+const app = express();
 app.use(express.json());
 
-// Cấu hình PORT (ưu tiên biến môi trường, mặc định 3000)
-const PORT = process.env.PORT || 3000;
+// Sử dụng route người dùng
+app.use('/api', userRoutes);
 
-// Khởi động server
-app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
-});
+const PORT = 3000;
+app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
