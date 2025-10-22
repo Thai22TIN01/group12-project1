@@ -1,4 +1,4 @@
-#  nhóm 12 – CRUD MERN Application
+#  Nhóm 12 – CRUD MERN Application
 
 
 **Môn học:** Phát triển phần mềm nhóm (Buổi 4)  
@@ -33,3 +33,19 @@ Dự án **CRUD MERN Application** là một ứng dụng web đơn giản cho p
 ---
 
 ##  Cấu trúc thư mục
+group12-project/
+│
+├── backend/ # Mã nguồn backend (Node + Express)
+│ ├── controllers/ # Xử lý logic CRUD
+│ ├── routes/ # Khai báo API endpoint
+│ ├── models/ # Định nghĩa schema MongoDB
+│ └── server.js # File khởi chạy server
+│
+├── frontend/ # Mã nguồn frontend (React)
+│ ├── src/
+│ │ ├── components/ # Các component giao diện
+│ │ ├── pages/ # Trang AddUser, UserList
+│ │ └── App.js # Component chính
+│ └── package.json # Cấu hình React
+│
+└── README.md # Mô tả dự án
