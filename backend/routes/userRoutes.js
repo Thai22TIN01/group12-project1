@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { getUsers, addUser } = require("../controllers/userController");
+const userController = require("../controllers/userController");
 
-// ✅ Các route API cơ bản
-router.get("/", getUsers);     // GET /api/users
-router.post("/", addUser);     // POST /api/users
+// ✅ Các route CRUD đầy đủ
+router.get("/", userController.getUsers);       // GET toàn bộ user
+router.post("/", userController.addUser);       // POST thêm user mới
+router.put("/:id", userController.updateUser);  // PUT sửa user
+router.delete("/:id", userController.deleteUser); // DELETE xóa user
 
 module.exports = router;
