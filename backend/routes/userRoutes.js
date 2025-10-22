@@ -1,11 +1,11 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { getUsers, addUser } = require('../controllers/userController');
+const userController = require("../controllers/userController");
 
-// GET: Lấy danh sách user
-router.get('/users', getUsers);
-
-// POST: Thêm user mới
-router.post('/users', addUser);
+// ROUTE API CRUD
+router.get("/users", userController.getUsers);         // GET: lấy danh sách
+router.post("/users", userController.createUser);      // POST: thêm mới
+router.put("/users/:id", userController.updateUser);   // PUT: sửa
+router.delete("/users/:id", userController.deleteUser); // DELETE: xóa
 
 module.exports = router;
