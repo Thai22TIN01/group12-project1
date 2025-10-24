@@ -1,13 +1,18 @@
+// 🟢 server.js
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
+
+// Import các route
 const userRoutes = require("./routes/userRoutes");
-const authRoutes = require("./routes/authRoutes"); // 👈 Đưa dòng này lên đây
+const authRoutes = require("./routes/authRoutes");
+const profileRoutes = require("./routes/profileRoutes"); // 👈 Hoạt động 2
 
 dotenv.config();
-
 const app = express();
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 
@@ -17,11 +22,14 @@ mongoose
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// ✅ Dùng route CRUD
+// ✅ Dùng route CRUD (Buổi 4)
 app.use("/api/users", userRoutes);
 
-// ✅ Dùng route Authentication
-app.use("/", authRoutes); // 👈 Đặt ở đây, trước app.listen()
+// ✅ Dùng route Authentication (Hoạt động 1)
+app.use("/", authRoutes);
+
+// ✅ Dùng route Profile (Hoạt động 2)
+app.use("/", profileRoutes);
 
 // ✅ Khởi động server
 const PORT = process.env.PORT || 5000;
