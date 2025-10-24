@@ -1,4 +1,4 @@
-// 🟢 server.js — Backend Authentication + Profile
+// 🟢 server.js — Backend Authentication + Profile + Admin
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
@@ -8,6 +8,7 @@ const cors = require("cors");
 const userRoutes = require("./routes/userRoutes");       // CRUD (Buổi 4)
 const authRoutes = require("./routes/authRoutes");       // Authentication (Hoạt động 1)
 const profileRoutes = require("./routes/profileRoutes"); // Profile (Hoạt động 2)
+const adminRoutes = require("./routes/adminRoutes");     // Admin (Hoạt động 3)
 
 dotenv.config();
 const app = express();
@@ -30,6 +31,9 @@ app.use("/", authRoutes);
 
 // ✅ Dùng route Profile (Hoạt động 2)
 app.use("/", profileRoutes);
+
+// ✅ Dùng route Admin (Hoạt động 3)
+app.use("/", adminRoutes);
 
 // ✅ Khởi động server
 const PORT = process.env.PORT || 5000;
