@@ -1,24 +1,27 @@
 const User = require("../models/User");
 
-// Xem thông tin cá nhân
+// 🟢 Xem thông tin cá nhân (GET /profile)
 exports.getProfile = async (req, res) => {
-  res.json(req.user);
+  try {
+    const user = await User.findById(req.user.id).select("-password"); // bỏ mật khẩu
+    if (!user) return res.status(404).json({ message: "Không tìm thấy người dùng!" });
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
-// Cập nhật thông tin cá nhân
+// 🟢 Cập nhật thông tin cá nhân (PUT /profile)
 exports.updateProfile = async (req, res) => {
   try {
     const { name, email } = req.body;
-    const user = await User.findById(req.user._id);
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
+      { name, email },
+      { new: true }
+    ).select("-password");
 
-    if (user) {
-      user.name = name || user.name;
-      user.email = email || user.email;
-      await user.save();
-      res.json({ message: "Cập nhật thành công!", user });
-    } else {
-      res.status(404).json({ message: "Không tìm thấy user" });
-    }
+    res.json({ message: "Cập nhật thành công!", user: updatedUser });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

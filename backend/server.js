@@ -1,13 +1,13 @@
-// 🟢 server.js
+// 🟢 server.js — Backend Authentication + Profile
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
 
 // Import các route
-const userRoutes = require("./routes/userRoutes");
-const authRoutes = require("./routes/authRoutes");
-const profileRoutes = require("./routes/profileRoutes"); // 👈 Hoạt động 2
+const userRoutes = require("./routes/userRoutes");       // CRUD (Buổi 4)
+const authRoutes = require("./routes/authRoutes");       // Authentication (Hoạt động 1)
+const profileRoutes = require("./routes/profileRoutes"); // Profile (Hoạt động 2)
 
 dotenv.config();
 const app = express();
