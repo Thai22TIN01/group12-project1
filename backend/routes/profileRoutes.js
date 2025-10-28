@@ -1,12 +1,20 @@
+// 🟢 Routes cho Upload Avatar (Buổi 6 - Hoạt động 3)
 const express = require("express");
 const router = express.Router();
-const { getProfile, updateProfile } = require("../controllers/profileController");
-const { protect } = require("../middleware/authMiddleware");
+const profileController = require("../controllers/profileController");
+const verifyAccessToken = require("../middleware/verifyAccessToken");
+const upload = require("../middleware/upload");
 
-// 🟢 Lấy thông tin người dùng
-router.get("/profile", protect, getProfile);
+// Xem & cập nhật thông tin cá nhân
+router.get("/", verifyAccessToken, profileController.getProfile);
+router.put("/", verifyAccessToken, profileController.updateProfile);
 
-// 🟢 Cập nhật thông tin người dùng
-router.put("/profile", protect, updateProfile);
+// Upload ảnh đại diện
+router.post(
+  "/upload-avatar",
+  verifyAccessToken,
+  upload.single("avatar"),
+  profileController.uploadAvatar
+);
 
 module.exports = router;
