@@ -1,3 +1,6 @@
+// ✅ Hoạt động 2: kiểm tra phân quyền đã được cấu hình (Thái test)
+
+
 // 🟢 Controller quản lý người dùng (Buổi 6 - Hoạt động 2)
 const User = require("../models/User");
 
