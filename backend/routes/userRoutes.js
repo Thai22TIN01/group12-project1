@@ -1,11 +1,20 @@
+// 🟢 Routes quản lý người dùng có phân quyền (Buổi 6 - Hoạt động 2)
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
+const verifyAccessToken = require("../middleware/verifyAccessToken");
+const checkRole = require("../middleware/checkRole");
 
-// ✅ Các route CRUD đầy đủ
-router.get("/", userController.getUsers);       // GET toàn bộ user
-router.post("/", userController.addUser);       // POST thêm user mới
-router.put("/:id", userController.updateUser);  // PUT sửa user
-router.delete("/:id", userController.deleteUser); // DELETE xóa user
+// ✅ Xem danh sách user – chỉ ADMIN được quyền
+router.get("/", verifyAccessToken, checkRole(["admin"]), userController.getUsers);
+
+// ✅ Thêm user mới – chỉ ADMIN được quyền thêm
+router.post("/", verifyAccessToken, checkRole(["admin"]), userController.addUser);
+
+// ✅ Cập nhật user – ADMIN hoặc chính chủ được phép
+router.put("/:id", verifyAccessToken, userController.updateUser);
+
+// ✅ Xóa user – chỉ ADMIN được quyền xóa
+router.delete("/:id", verifyAccessToken, checkRole(["admin"]), userController.deleteUser);
 
 module.exports = router;

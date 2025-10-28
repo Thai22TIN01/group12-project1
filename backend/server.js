@@ -28,7 +28,7 @@ mongoose
 app.use("/api/users", userRoutes);
 
 // ✅ Dùng route Authentication (Hoạt động 1)
-app.use("/", authRoutes);
+app.use("/auth", authRoutes);
 
 // ✅ Dùng route Profile (Hoạt động 2)
 app.use("/", profileRoutes);
