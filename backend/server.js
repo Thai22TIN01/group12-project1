@@ -1,15 +1,17 @@
-// 🟢 server.js — Backend Authentication + Profile + Admin + Advanced
+// 🟢 server.js — Backend Authentication + Profile + Admin + Advanced + Forgot Password + Upload Avatar
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
 
 // Import các route
-const userRoutes = require("./routes/userRoutes");       // CRUD (Buổi 4)
-const authRoutes = require("./routes/authRoutes");       // Authentication (Hoạt động 1)
-const profileRoutes = require("./routes/profileRoutes"); // Profile (Hoạt động 2)
-const adminRoutes = require("./routes/adminRoutes");     // Admin (Hoạt động 3)
-const advancedRoutes = require("./routes/advancedRoutes"); // 🆕 Advanced (Hoạt động 4)
+const userRoutes = require("./routes/userRoutes");         // CRUD (Buổi 4)
+const authRoutes = require("./routes/authRoutes");         // Authentication (Hoạt động 1)
+const profileRoutes = require("./routes/profileRoutes");   // Profile (Hoạt động 2)
+const adminRoutes = require("./routes/adminRoutes");       // Admin (Hoạt động 3)
+const advancedRoutes = require("./routes/advancedRoutes"); // Advanced (Hoạt động 4)
+const forgotRoutes = require("./routes/forgotRoutes");     // Quên mật khẩu (Email Reset)
+const uploadRoutes = require("./routes/uploadRoutes");     // 🆕 Upload Avatar (Hoạt động 5)
 
 dotenv.config();
 const app = express();
@@ -37,7 +39,13 @@ app.use("/", profileRoutes);
 app.use("/", adminRoutes);
 
 // ✅ Dùng route Advanced (Hoạt động 4)
-app.use("/", advancedRoutes); // 👈 Thêm dòng này
+app.use("/", advancedRoutes);
+
+// ✅ Dùng route Forgot Password (Hoạt động 5)
+app.use("/", forgotRoutes);
+
+// ✅ Dùng route Upload Avatar (Hoạt động 6)
+app.use("/", uploadRoutes);
 
 // ✅ Khởi động server
 const PORT = process.env.PORT || 5000;
