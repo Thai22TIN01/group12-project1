@@ -1,11 +1,19 @@
+// backend/routes/userRoutes.js
 const express = require("express");
 const router = express.Router();
-const userController = require("../controllers/userController");
+const { getUsers, addUser, updateUser, deleteUser } = require("../controllers/userController");
 
-// ✅ Các route CRUD đầy đủ
-router.get("/", userController.getUsers);       // GET toàn bộ user
-router.post("/", userController.addUser);       // POST thêm user mới
-router.put("/:id", userController.updateUser);  // PUT sửa user
-router.delete("/:id", userController.deleteUser); // DELETE xóa user
+// Route CRUD bình thường
+router.get("/", getUsers);
+router.post("/", addUser);
+router.put("/:id", updateUser);
+router.delete("/:id", deleteUser);
+
+// 🆕 Route test: lấy user role = Admin
+router.get("/admins", async (req, res) => {
+  const User = require("../models/User");
+  const admins = await User.find({ role: "Admin" });
+  res.json(admins);
+});
 
 module.exports = router;
