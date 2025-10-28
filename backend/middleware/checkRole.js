@@ -1,3 +1,6 @@
+// 🟢 Cập nhật lần 2: thêm comment để tạo PR Hoạt động 2 (SV1 Nguyễn Đình Thái)
+
+
 // 🟢 Middleware kiểm tra quyền người dùng (Buổi 6 - Hoạt động 2)
 module.exports = function (roles) {
   return (req, res, next) => {
