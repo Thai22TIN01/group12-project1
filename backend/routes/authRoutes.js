@@ -11,8 +11,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-const router = express.Router();
-
 // 🟢 Đăng ký
 router.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
