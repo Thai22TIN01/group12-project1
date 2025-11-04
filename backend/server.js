@@ -6,7 +6,7 @@ const cors = require("cors");
 
 // Import các route
 const userRoutes = require("./routes/userRoutes");         // CRUD (Buổi 4)
-const authRoutes = require("./routes/authRoutes");         // Authentication (Hoạt động 1)
+const authRoutes = require("./routes/authRoutes");        // Authentication (Hoạt động 1)
 const profileRoutes = require("./routes/profileRoutes");   // Profile (Hoạt động 2)
 const adminRoutes = require("./routes/adminRoutes");       // Admin (Hoạt động 3)
 const advancedRoutes = require("./routes/advancedRoutes"); // Advanced (Hoạt động 4)
@@ -26,26 +26,12 @@ mongoose
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// ✅ Dùng route CRUD (Buổi 4)
-app.use("/api/users", userRoutes);
-
-// ✅ Dùng route Authentication (Hoạt động 1)
-app.use("/", authRoutes);
-
-// ✅ Dùng route Profile (Hoạt động 2)
-app.use("/", profileRoutes);
-
-// ✅ Dùng route Admin (Hoạt động 3)
-app.use("/", adminRoutes);
-
-// ✅ Dùng route Advanced (Hoạt động 4)
-app.use("/", advancedRoutes);
-
-// ✅ Dùng route Forgot Password (Hoạt động 5)
-app.use("/", forgotRoutes);
-
-// ✅ Dùng route Upload Avatar (Hoạt động 6)
-app.use("/", uploadRoutes);
+app.use("/api/users", userRoutes);             // Buổi 4
+app.use("/api/auth", authRoutes);              // Đăng ký / đăng nhập / forgot / reset
+app.use("/api/profile", profileRoutes);        // Hồ sơ
+app.use("/api/admin", adminRoutes);             // Admin
+app.use("/api/advanced", advancedRoutes);      // Advanced (phân quyền)
+app.use("/api/upload", uploadRoutes)         // Upload avatar
 
 // ✅ Khởi động server
 const PORT = process.env.PORT || 5000;

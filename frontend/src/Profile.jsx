@@ -10,7 +10,7 @@ export default function Profile() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/profile", {
+        const res = await axios.get("http://localhost:5000/api/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser(res.data);
@@ -23,17 +23,17 @@ export default function Profile() {
   }, [token]);
 
   // 🟢 Cập nhật thông tin user
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await axios.put("http://localhost:5000/profile", form, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      alert(res.data.message);
-    } catch (err) {
-      alert("❌ Lỗi cập nhật thông tin");
-    }
-  };
+ const handleUpdate = async (e) => {
+  e.preventDefault();
+  try {
+    const res = await axios.put("http://localhost:5000/api/profile", form, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    alert(res.data.message);
+  } catch (err) {
+    alert("❌ Lỗi cập nhật thông tin");
+  }
+};
 
   return (
     <div style={{ textAlign: "center", marginTop: 40 }}>

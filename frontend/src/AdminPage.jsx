@@ -6,13 +6,13 @@ function AdminPage() {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    fetch("http://localhost:5000/users", {
+    fetch("http://localhost:5000/api/admin/all", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
-          setUsers(data);       // ✅ nếu là mảng, hiển thị danh sách
+          setUsers(data); // ✅ nếu là mảng thì hiển thị danh sách
         } else {
           setError(data.message || "Không có quyền truy cập!");
         }
@@ -22,7 +22,7 @@ function AdminPage() {
 
   const handleDelete = async (id) => {
     if (window.confirm("Xác nhận xóa user này?")) {
-      await fetch(`http://localhost:5000/users/${id}`, {
+      await fetch(`http://localhost:5000/api/admin/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -30,7 +30,6 @@ function AdminPage() {
     }
   };
 
-  // 🟢 Nếu có lỗi (không phải admin)
   if (error) {
     return (
       <div style={{ color: "red", textAlign: "center", marginTop: "50px" }}>
