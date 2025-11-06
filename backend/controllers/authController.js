@@ -58,16 +58,11 @@ exports.login = async (req, res) => {
 
     // ✅ Trả về token + role + thông tin user
     res.json({
-      message: "Đăng nhập thành công!",
-      accessToken,
-      refreshToken,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
-    });
+  message: "Đăng nhập thành công!",
+  accessToken,
+  refreshToken,
+  user: { id: user._id, email: user.email, name: user.name, role: user.role },
+});;
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

@@ -4,7 +4,7 @@ import axios from "axios";
 export default function Profile() {
   const [user, setUser] = useState({});
   const [form, setForm] = useState({ name: "", email: "" });
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("accessToken"); // ✅ backend main dùng accessToken
 
   // 🟢 Lấy thông tin user từ backend
   useEffect(() => {
@@ -13,33 +13,40 @@ export default function Profile() {
         const res = await axios.get("http://localhost:5000/api/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setUser(res.data);
-        setForm({ name: res.data.name, email: res.data.email });
+
+        // ✅ backend hiện trả về dạng { success: true, user: {...} } hoặc user trực tiếp
+        const userData = res.data.user || res.data;
+
+        setUser(userData);
+        setForm({ name: userData.name, email: userData.email });
       } catch (err) {
-        alert("❌ Không lấy được thông tin user");
+        console.error("❌ Lỗi lấy profile:", err);
+        alert("Không lấy được thông tin người dùng!");
       }
     };
-    fetchProfile();
+
+    if (token) fetchProfile();
   }, [token]);
 
   // 🟢 Cập nhật thông tin user
- const handleUpdate = async (e) => {
-  e.preventDefault();
-  try {
-    const res = await axios.put("http://localhost:5000/api/profile", form, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    alert(res.data.message);
-  } catch (err) {
-    alert("❌ Lỗi cập nhật thông tin");
-  }
-};
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.put("http://localhost:5000/api/profile", form, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      alert(res.data.message || "✅ Cập nhật thành công!");
+    } catch (err) {
+      console.error("❌ Lỗi cập nhật:", err);
+      alert("Không thể cập nhật thông tin!");
+    }
+  };
 
   return (
     <div style={{ textAlign: "center", marginTop: 40 }}>
       <h2>🧍‍♂️ Thông tin cá nhân</h2>
 
-      {/* 🖼️ Avatar hiển thị (lấy từ MongoDB) */}
+      {/* 🖼️ Avatar hiển thị */}
       <div style={{ marginBottom: 20 }}>
         <img
           src={
@@ -59,8 +66,12 @@ export default function Profile() {
       </div>
 
       {/* 🧩 Thông tin */}
-      <p><b>Tên:</b> {user.name}</p>
-      <p><b>Email:</b> {user.email}</p>
+      <p>
+        <b>Tên:</b> {user.name}
+      </p>
+      <p>
+        <b>Email:</b> {user.email}
+      </p>
 
       {/* ✏️ Form cập nhật */}
       <form onSubmit={handleUpdate}>
@@ -69,13 +80,15 @@ export default function Profile() {
           onChange={(e) => setForm({ ...form, name: e.target.value })}
           placeholder="Nhập tên mới"
           style={{ width: "250px", padding: "8px", marginBottom: "10px" }}
-        /><br />
+        />
+        <br />
         <input
           value={form.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
           placeholder="Nhập email mới"
           style={{ width: "250px", padding: "8px", marginBottom: "10px" }}
-        /><br />
+        />
+        <br />
         <button type="submit" style={{ padding: "8px 16px" }}>
           Cập nhật
         </button>

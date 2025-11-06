@@ -8,7 +8,8 @@ export default function Register() {
     e.preventDefault();
     try {
       // ✅ Gọi API backend (port 5000)
-      const res = await axios.post("http://localhost:5000/api/auth/register", form);
+      const res = await axios.post("http://localhost:5000/api/auth/signup", form)
+;
       alert(res.data.message || "Đăng ký thành công!");
     } catch (err) {
       alert(err.response?.data?.message || "Lỗi kết nối server");

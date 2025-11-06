@@ -6,7 +6,7 @@ exports.getAllUsers = async (req, res) => {
     const users = await User.find().select("-password");
     res.json(users);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Lỗi khi lấy danh sách người dùng!" });
   }
 };
 

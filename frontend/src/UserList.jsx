@@ -5,21 +5,29 @@ function UserList() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // 🟢 Lấy token và role từ localStorage
-  const token = localStorage.getItem("token");
-  const role = localStorage.getItem("role"); // "admin" | "moderator" | "user"
+  const token = localStorage.getItem("accessToken");
+  const role = localStorage.getItem("role");
 
-  // 🔹 1. Hàm lấy danh sách user từ MongoDB
+  // 🟢 Lấy danh sách user
   const fetchUsers = async () => {
     try {
+      // ⚙️ Nếu chưa đăng nhập thì không gọi API
+      if (!token) {
+        console.log("⚠️ Chưa đăng nhập, chuyển hướng về trang đăng nhập...");
+        window.location.href = "/login";
+        return;
+      }
+
       const res = await axios.get("http://localhost:5000/api/users", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(res.data);
     } catch (err) {
       console.error("❌ Lỗi khi tải danh sách:", err);
-      if (err.response?.status === 401) {
-        alert("Phiên đăng nhập hết hạn, vui lòng đăng nhập lại!");
+
+      if (err.response?.status === 401 && token) {
+        // 🧩 Chỉ hiện cảnh báo nếu token tồn tại nhưng hết hạn
+        alert("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại!");
         localStorage.clear();
         window.location.href = "/login";
       } else {
@@ -34,7 +42,6 @@ function UserList() {
     fetchUsers();
   }, []);
 
-  // 🔹 2. Hàm XÓA user (chỉ admin được phép)
   const handleDelete = async (id) => {
     if (role !== "admin") {
       alert("🚫 Bạn không có quyền xóa người dùng!");
@@ -50,12 +57,10 @@ function UserList() {
       alert("🗑️ Xóa thành công!");
       fetchUsers();
     } catch (err) {
-      console.error("❌ Lỗi khi xóa:", err);
       alert("Không thể xóa người dùng!");
     }
   };
 
-  // 🔹 3. Hàm SỬA user (admin hoặc moderator)
   const handleEdit = async (user) => {
     if (role !== "admin" && role !== "moderator") {
       alert("🚫 Bạn không có quyền sửa người dùng!");
@@ -74,7 +79,6 @@ function UserList() {
       alert("✏️ Cập nhật thành công!");
       fetchUsers();
     } catch (err) {
-      console.error("❌ Lỗi khi sửa:", err);
       alert("Không thể sửa người dùng!");
     }
   };
@@ -95,12 +99,8 @@ function UserList() {
                 👤 <b>{u.name}</b> — {u.email}
               </span>
 
-              {/* ✅ Chỉ hiện nút sửa/xóa khi có quyền */}
               {(role === "admin" || role === "moderator") && (
-                <button
-                  onClick={() => handleEdit(u)}
-                  style={{ marginLeft: 10 }}
-                >
+                <button onClick={() => handleEdit(u)} style={{ marginLeft: 10 }}>
                   ✏️ Sửa
                 </button>
               )}

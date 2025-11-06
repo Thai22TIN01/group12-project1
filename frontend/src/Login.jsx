@@ -7,26 +7,29 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
+      // ✅ Gọi đúng endpoint backend
       const res = await axios.post("http://localhost:5000/api/auth/login", form);
 
-      // ✅ Lưu token + role
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("role", res.data.role);
+      // ✅ Lưu Access + Refresh Token và thông tin user
+      localStorage.setItem("accessToken", res.data.accessToken);
+      localStorage.setItem("refreshToken", res.data.refreshToken);
       localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("role", res.data.user.role);
 
-      alert("Đăng nhập thành công!");
-      console.log("JWT Token:", res.data.token);
-      console.log("Role:", res.data.role);
+      alert("✅ Đăng nhập thành công!");
+      console.log("Access Token:", res.data.accessToken);
+      console.log("Role:", res.data.user.role);
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.message || "Lỗi đăng nhập");
+      alert(err.response?.data?.message || "❌ Lỗi đăng nhập");
     }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     localStorage.removeItem("user");
+    localStorage.removeItem("role");
     alert("Đăng xuất thành công!");
   };
 
@@ -36,12 +39,12 @@ export default function Login() {
       <input
         placeholder="Email"
         onChange={(e) => setForm({ ...form, email: e.target.value })}
-      /><br/>
+      /><br />
       <input
         type="password"
         placeholder="Mật khẩu"
         onChange={(e) => setForm({ ...form, password: e.target.value })}
-      /><br/>
+      /><br />
       <button onClick={handleLogin}>Đăng nhập</button>
       <button onClick={handleLogout}>Đăng xuất</button>
     </div>
