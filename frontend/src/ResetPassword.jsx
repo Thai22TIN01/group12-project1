@@ -13,11 +13,11 @@ export default function ResetPassword() {
   const handleReset = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/reset", {
-        email,
-        token,
-        newPassword,
-      });
+      const res = await axios.post("http://localhost:5000/api/auth/reset-password", {
+  email,
+  token,
+  newPassword,
+})
       setMessage(res.data.message || "Đặt lại mật khẩu thành công!");
     } catch (err) {
       setMessage(err.response?.data?.message || "Lỗi kết nối server");

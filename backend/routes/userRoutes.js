@@ -2,19 +2,18 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
-const verifyAccessToken = require("../middleware/verifyAccessToken");
-const checkRole = require("../middleware/checkRole");
+const { protect, isAdmin, isAdminOrModerator } = require("../middleware/authMiddleware");
 
-// ✅ Xem danh sách user – chỉ ADMIN được quyền
-router.get("/", verifyAccessToken, checkRole(["admin"]), userController.getUsers);
+// 🟢 Lấy danh sách tất cả user (chỉ Admin xem được)
+router.get("/", protect, isAdmin, userController.getUsers);
 
-// ✅ Thêm user mới – chỉ ADMIN được quyền thêm
-router.post("/", verifyAccessToken, checkRole(["admin"]), userController.addUser);
+// 🟡 Thêm user mới (chỉ Admin)
+router.post("/", protect, isAdmin, userController.addUser);
 
-// ✅ Cập nhật user – ADMIN hoặc chính chủ được phép
-router.put("/:id", verifyAccessToken, userController.updateUser);
+// 🟠 Sửa thông tin user (Admin hoặc Moderator)
+router.put("/:id", protect, isAdminOrModerator, userController.updateUser);
 
-// ✅ Xóa user – chỉ ADMIN được quyền xóa
-router.delete("/:id", verifyAccessToken, checkRole(["admin"]), userController.deleteUser);
+// 🔴 Xóa user (chỉ Admin)
+router.delete("/:id", protect, isAdmin, userController.deleteUser);
 
 module.exports = router;

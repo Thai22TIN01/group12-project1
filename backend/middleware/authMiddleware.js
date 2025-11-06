@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
+// 🟢 Middleware xác thực người dùng (có token hợp lệ)
 exports.protect = async (req, res, next) => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
@@ -17,11 +18,20 @@ exports.protect = async (req, res, next) => {
   }
 };
 
-// 🟢 Middleware kiểm tra quyền (Admin)
+// 🟡 Kiểm tra quyền Admin
 exports.isAdmin = (req, res, next) => {
   if (req.user && req.user.role === "admin") {
     next();
   } else {
     res.status(403).json({ message: "Không có quyền Admin!" });
+  }
+};
+
+// 🟠 Kiểm tra quyền Moderator hoặc Admin
+exports.isAdminOrModerator = (req, res, next) => {
+  if (req.user && (req.user.role === "admin" || req.user.role === "moderator")) {
+    next();
+  } else {
+    res.status(403).json({ message: "Chỉ Admin hoặc Moderator được phép thực hiện!" });
   }
 };

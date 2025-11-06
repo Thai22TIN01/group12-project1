@@ -4,9 +4,9 @@ const { getAllUsers, deleteUser } = require("../controllers/adminController");
 const { protect, isAdmin } = require("../middleware/authMiddleware");
 
 // 🟢 Chỉ admin mới được xem danh sách user
-router.get("/users", protect, isAdmin, getAllUsers);
+router.get("/all", protect, isAdmin, getAllUsers);
 
 // 🟢 Chỉ admin mới được xóa user
-router.delete("/users/:id", protect, isAdmin, deleteUser);
+router.delete("/:id", protect, isAdmin, deleteUser);
 
 module.exports = router;

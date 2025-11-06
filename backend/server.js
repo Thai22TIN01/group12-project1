@@ -8,6 +8,7 @@ const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 
+// ---- Import routes
 const userRoutes = require("./routes/userRoutes");         // CRUD (Buổi 4)
 const authRoutes = require("./routes/authRoutes");         // Authentication (Hoạt động 1)
 const profileRoutes = require("./routes/profileRoutes");   // Profile (Hoạt động 2)
@@ -18,16 +19,16 @@ const uploadRoutes = require("./routes/uploadRoutes");     // Upload Avatar (Ho�
 
 const app = express();
 
-// ---- Security & general middleware
+// ---- Security middleware
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
-app.use(morgan("dev")); // ghi log request vào terminal
+app.use(morgan("dev"));
 
-// ---- Rate limiting (áp dụng cho tất cả endpoint bắt đầu bằng /api)
+// ---- Rate limiting (chống spam API)
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // mỗi IP tối đa 100 requests trong window
+  windowMs: 15 * 60 * 1000, // 15 phút
+  max: 100, // mỗi IP chỉ được 100 requests / 15 phút
   standardHeaders: true,
   legacyHeaders: false,
   message: {
@@ -46,16 +47,16 @@ mongoose
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// ---- Routes (prefix nhất quán)
-app.use("/api/users", userRoutes);           // CRUD user
-app.use("/api/auth", authRoutes);            // signup / login / refresh / logout
-app.use("/api/profile", profileRoutes);      // profile, upload avatar nếu muốn
-app.use("/api/admin", adminRoutes);          // admin routes
-app.use("/api/advanced", advancedRoutes);    // advanced features (RBAC, refresh token...)
-app.use("/api/forgot", forgotRoutes);        // forgot/reset password
-app.use("/api/upload", uploadRoutes);        // upload avatar/files
+// ---- Register routes (prefix chuẩn /api/...)
+app.use("/api/users", userRoutes);          // Buổi 4
+app.use("/api/auth", authRoutes);           // Đăng ký / đăng nhập / refresh / logout / forgot / reset
+app.use("/api/profile", profileRoutes);     // Hồ sơ cá nhân
+app.use("/api/admin", adminRoutes);         // Quản trị (Admin)
+app.use("/api/advanced", advancedRoutes);   // Advanced features (RBAC, token, phân quyền)
+app.use("/api/forgot", forgotRoutes);       // Quên mật khẩu (Email reset)
+app.use("/api/upload", uploadRoutes);       // Upload Avatar (Cloudinary)
 
-// ---- Health check
+// ---- Health check route
 app.get("/health", (req, res) => res.json({ status: "ok", time: Date.now() }));
 
 // ---- 404 handler
