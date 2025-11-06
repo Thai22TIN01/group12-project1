@@ -1,44 +1,37 @@
-// 🟢 server.js — Backend Authentication + Profile + Admin + Advanced
+console.log("🟢 RUNNING: backend/server.js");
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
 
-// Import các route
-const userRoutes = require("./routes/userRoutes");       // CRUD (Buổi 4)
-const authRoutes = require("./routes/authRoutes");       // Authentication (Hoạt động 1)
-const profileRoutes = require("./routes/profileRoutes"); // Profile (Hoạt động 2)
-const adminRoutes = require("./routes/adminRoutes");     // Admin (Hoạt động 3)
-const advancedRoutes = require("./routes/advancedRoutes"); // 🆕 Advanced (Hoạt động 4)
+const userRoutes = require("./routes/userRoutes");
+const authRoutes = require("./routes/authRoutes"); // 🆕 route đăng ký / đăng nhập / refresh / logout
+const testRoutes = require("./routes/testRoutes"); // 🆕 route test RefreshToken
+
+// 🟡 Kiểm tra import
+console.log("🟡 Đã import uploadTest_fixed.js và testRoutes.js trong server.js");
 
 dotenv.config();
-const app = express();
 
-// Middleware
+const app = express();
 app.use(cors());
 app.use(express.json());
 
 // ✅ Kết nối MongoDB
 mongoose
   .connect(process.env.MONGODB_URI)
-  .then(() => console.log("✅ MongoDB connected"))
-  .catch((err) => console.error("❌ MongoDB connection error:", err));
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch((err) => console.log("❌ MongoDB Connection Error:", err));
 
-// ✅ Dùng route CRUD (Buổi 4)
+// ✅ Route CRUD User
 app.use("/api/users", userRoutes);
 
-// ✅ Dùng route Authentication (Hoạt động 1)
-app.use("/auth", authRoutes);
+// ✅ Route Auth (đăng ký / đăng nhập / refresh / logout)
+app.use("/api/auth", authRoutes);
 
-// ✅ Dùng route Profile (Hoạt động 2)
-app.use("/", profileRoutes);
+// ✅ Route test RefreshToken (SV3)
+app.use("/api/test", testRoutes);
 
-// ✅ Dùng route Admin (Hoạt động 3)
-app.use("/", adminRoutes);
-
-// ✅ Dùng route Advanced (Hoạt động 4)
-app.use("/", advancedRoutes); // 👈 Thêm dòng này
-
-// ✅ Khởi động server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+
