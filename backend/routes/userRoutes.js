@@ -1,3 +1,4 @@
+// 🟢 Routes quản lý người dùng có phân quyền (Buổi 6 - Hoạt động 2)
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");

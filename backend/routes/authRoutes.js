@@ -3,11 +3,13 @@ const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/authController");
 
-router.post("/register", authController.signup);
+// 🟢 Các route Authentication
+router.post("/signup", authController.signup);
 router.post("/login", authController.login);
+router.post("/refresh", authController.refreshToken); // ✅ Cấp lại access token
 router.post("/logout", authController.logout);
 
-// ✅ Gộp chức năng forgot / reset vào đây
+// 🟢 Gộp luôn chức năng quên / đặt lại mật khẩu
 router.post("/forgot-password", authController.forgotPassword);
 router.post("/reset-password", authController.resetPassword);
 
