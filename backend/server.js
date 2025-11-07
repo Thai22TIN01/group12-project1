@@ -21,9 +21,17 @@ const app = express();
 
 // ---- Security middleware
 app.use(helmet());
-app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
+
+// ---- CORS cho phép frontend truy cập
+app.use(cors({
+  origin: [
+    "http://localhost:3000",
+    "https://group12-project1-lgwn.vercel.app"
+  ],
+  credentials: true,
+}));
 
 // ---- Rate limiting (chống spam API)
 const apiLimiter = rateLimit({
@@ -40,10 +48,7 @@ app.use("/api", apiLimiter);
 
 // ---- MongoDB connection
 mongoose
-  .connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
