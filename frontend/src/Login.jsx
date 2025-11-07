@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "./api"; // ✅ import cấu hình API dùng axios baseURL
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -7,8 +7,8 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      // ✅ Gọi đúng endpoint backend
-      const res = await axios.post("http://localhost:5000/api/auth/login", form);
+      // ✅ Tự động gọi backend Render hoặc localhost tùy môi trường
+      const res = await api.post("/auth/login", form);
 
       // ✅ Lưu Access + Refresh Token và thông tin user
       localStorage.setItem("accessToken", res.data.accessToken);

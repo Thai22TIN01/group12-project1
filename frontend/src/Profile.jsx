@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "./api"; // ✅ Dùng axios instance cấu hình sẵn
 
 export default function Profile() {
   const [user, setUser] = useState({});
   const [form, setForm] = useState({ name: "", email: "" });
-  const token = localStorage.getItem("accessToken"); // ✅ backend main dùng accessToken
+  const token = localStorage.getItem("accessToken");
 
   // 🟢 Lấy thông tin user từ backend
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/profile", {
+        const res = await api.get("/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        // ✅ backend hiện trả về dạng { success: true, user: {...} } hoặc user trực tiếp
+        // ✅ Backend trả { success: true, user: {...} } hoặc user trực tiếp
         const userData = res.data.user || res.data;
 
         setUser(userData);
@@ -32,13 +32,13 @@ export default function Profile() {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.put("http://localhost:5000/api/profile", form, {
+      const res = await api.put("/profile", form, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert(res.data.message || "✅ Cập nhật thành công!");
     } catch (err) {
       console.error("❌ Lỗi cập nhật:", err);
-      alert("Không thể cập nhật thông tin!");
+      alert(err.response?.data?.message || "Không thể cập nhật thông tin!");
     }
   };
 

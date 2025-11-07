@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "./api"; // ✅ Dùng axios instance đã cấu hình
 
 function UserList() {
   const [users, setUsers] = useState([]);
@@ -11,22 +11,21 @@ function UserList() {
   // 🟢 Lấy danh sách user
   const fetchUsers = async () => {
     try {
-      // ⚙️ Nếu chưa đăng nhập thì không gọi API
       if (!token) {
         console.log("⚠️ Chưa đăng nhập, chuyển hướng về trang đăng nhập...");
         window.location.href = "/login";
         return;
       }
 
-      const res = await axios.get("http://localhost:5000/api/users", {
+      const res = await api.get("/users", {
         headers: { Authorization: `Bearer ${token}` },
       });
+
       setUsers(res.data);
     } catch (err) {
       console.error("❌ Lỗi khi tải danh sách:", err);
 
       if (err.response?.status === 401 && token) {
-        // 🧩 Chỉ hiện cảnh báo nếu token tồn tại nhưng hết hạn
         alert("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại!");
         localStorage.clear();
         window.location.href = "/login";
@@ -42,6 +41,7 @@ function UserList() {
     fetchUsers();
   }, []);
 
+  // 🧩 Xóa người dùng
   const handleDelete = async (id) => {
     if (role !== "admin") {
       alert("🚫 Bạn không có quyền xóa người dùng!");
@@ -51,7 +51,7 @@ function UserList() {
     if (!window.confirm("Bạn có chắc muốn xóa người dùng này không?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/users/${id}`, {
+      await api.delete(`/users/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("🗑️ Xóa thành công!");
@@ -61,6 +61,7 @@ function UserList() {
     }
   };
 
+  // ✏️ Sửa thông tin người dùng
   const handleEdit = async (user) => {
     if (role !== "admin" && role !== "moderator") {
       alert("🚫 Bạn không có quyền sửa người dùng!");
@@ -71,8 +72,8 @@ function UserList() {
     if (!newName) return;
 
     try {
-      await axios.put(
-        `http://localhost:5000/api/users/${user._id}`,
+      await api.put(
+        `/users/${user._id}`,
         { name: newName },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -83,7 +84,8 @@ function UserList() {
     }
   };
 
-  if (loading) return <p style={{ textAlign: "center" }}>⏳ Đang tải danh sách...</p>;
+  if (loading)
+    return <p style={{ textAlign: "center" }}>⏳ Đang tải danh sách...</p>;
 
   return (
     <div style={{ width: "500px", margin: "auto", textAlign: "center" }}>
@@ -100,7 +102,10 @@ function UserList() {
               </span>
 
               {(role === "admin" || role === "moderator") && (
-                <button onClick={() => handleEdit(u)} style={{ marginLeft: 10 }}>
+                <button
+                  onClick={() => handleEdit(u)}
+                  style={{ marginLeft: 10 }}
+                >
                   ✏️ Sửa
                 </button>
               )}

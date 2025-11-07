@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "./api"; // ✅ dùng axios instance có sẵn cấu hình
 
 function UploadAvatar() {
   const [file, setFile] = useState(null);
   const [email, setEmail] = useState(""); // có thể lấy từ localStorage nếu muốn
   const [msg, setMsg] = useState("");
   const [imageUrl, setImageUrl] = useState("");
-  const token = localStorage.getItem("token"); // nếu route có middleware protect
+  const token = localStorage.getItem("accessToken"); // ✅ chuẩn backend nhóm 12
 
   const handleUpload = async (e) => {
     e.preventDefault();
@@ -20,19 +20,20 @@ function UploadAvatar() {
     formData.append("email", email);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/upload", formData, {
+      // ✅ gọi endpoint /upload trên backend Render
+      const res = await api.post("/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
         },
       });
 
-      // ✅ backend trả về: { message, avatarUrl, user }
-      setMsg(res.data.message);
-      setImageUrl(res.data.avatarUrl); // ⚡ Đúng key backend trả về
+      // ✅ backend trả { message, avatarUrl, user }
+      setMsg(res.data.message || "✅ Upload thành công!");
+      setImageUrl(res.data.avatarUrl || "");
     } catch (err) {
       console.error("❌ Upload error:", err);
-      setMsg("❌ Lỗi kết nối server hoặc upload thất bại!");
+      setMsg(err.response?.data?.message || "❌ Lỗi kết nối hoặc upload thất bại!");
     }
   };
 

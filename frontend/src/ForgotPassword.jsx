@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import api from "./api"; // ✅ Dùng cấu hình axios chung
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -7,17 +8,12 @@ function ForgotPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:5000/api/auth/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await res.json();
-      setMsg(data.message || "Đã gửi yêu cầu!");
+      // ✅ Gọi API qua axios, tự động đổi giữa localhost và Render
+      const res = await api.post("/auth/forgot-password", { email });
+      setMsg(res.data.message || "✅ Đã gửi yêu cầu đặt lại mật khẩu!");
     } catch (err) {
-      setMsg("Lỗi kết nối server");
       console.error("❌ Lỗi khi gửi yêu cầu quên mật khẩu:", err);
+      setMsg(err.response?.data?.message || "❌ Lỗi kết nối máy chủ");
     }
   };
 

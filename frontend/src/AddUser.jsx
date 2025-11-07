@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "./api"; // ✅ dùng axios instance đã cấu hình
 
 function AddUser() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [users, setUsers] = useState([]);
 
-  // Lấy danh sách user từ MongoDB
+  // 🟢 Lấy danh sách user từ MongoDB
   const fetchUsers = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/users");
+      const res = await api.get("/users");
       setUsers(res.data);
     } catch (error) {
       console.error("❌ Lỗi khi tải danh sách:", error);
@@ -20,31 +20,29 @@ function AddUser() {
     fetchUsers();
   }, []);
 
-  // Xử lý validation & thêm user
+  // 🧩 Validation & thêm user
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Kiểm tra trống
     if (!name.trim()) {
       alert("⚠️ Name không được để trống");
       return;
     }
 
-    // Kiểm tra định dạng email
     if (!/\S+@\S+\.\S+/.test(email)) {
       alert("⚠️ Email không hợp lệ");
       return;
     }
 
     try {
-      await axios.post("http://localhost:5000/api/users", { name, email });
+      await api.post("/users", { name, email });
       alert("✅ Thêm user thành công!");
       setName("");
       setEmail("");
       fetchUsers();
     } catch (error) {
       console.error("❌ Lỗi khi thêm user:", error);
-      alert("Không thể thêm user. Kiểm tra lại server!");
+      alert(error.response?.data?.message || "Không thể thêm user!");
     }
   };
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "./api"; // ✅ import file cấu hình axios
 
 export default function Register() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -7,11 +7,13 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // ✅ Gọi API backend (port 5000)
-      const res = await axios.post("http://localhost:5000/api/auth/signup", form)
-;
+      // ✅ Tự động nhận backend Render hoặc localhost
+      const res = await api.post("/auth/signup", form);
+
       alert(res.data.message || "Đăng ký thành công!");
+      console.log("✅ User đăng ký:", res.data.user || form);
     } catch (err) {
+      console.error("❌ Error:", err);
       alert(err.response?.data?.message || "Lỗi kết nối server");
     }
   };
