@@ -1,18 +1,16 @@
 // src/api.js
 import axios from "axios";
 
-// ✅ Tự động nhận URL backend:
-// - Khi chạy local: dùng http://localhost:5000
-// - Khi deploy Vercel: dùng biến môi trường REACT_APP_API_URL
-const API_ORIGIN = process.env.REACT_APP_API_URL || "http://localhost:5000";
+// ✅ Tạm thời gán trực tiếp backend Render (bỏ env)
+const API_ORIGIN = "https://group12-project1-zrv7.onrender.com";
 
 // ✅ Tạo instance axios mặc định
 const API = axios.create({
   baseURL: `${API_ORIGIN}/api`,
-  withCredentials: true, // hỗ trợ cookie/session nếu cần
+  withCredentials: true,
 });
 
-// 🧩 Gắn sẵn token nếu có
+// 🧩 Gắn token nếu có
 API.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken");
   if (token) {
