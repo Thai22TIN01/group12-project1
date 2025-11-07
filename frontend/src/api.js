@@ -1,14 +1,11 @@
-// frontend/src/api.js
+// src/api.js
 import axios from "axios";
 
-// ✅ Nếu deploy trên Vercel → dùng Render
-// ✅ Nếu chạy local → dùng localhost:5000
+// ✅ Tự động đọc URL backend từ biến môi trường Vercel
 const API_ORIGIN = process.env.REACT_APP_API_URL || "http://localhost:5000";
-const API_BASE = `${API_ORIGIN}/api`;
-
-const api = axios.create({
-  baseURL: API_BASE,
+const API = axios.create({
+  baseURL: `${API_ORIGIN}/api`,
   withCredentials: true,
 });
 
-export default api;
+export default API;

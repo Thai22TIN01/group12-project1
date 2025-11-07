@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import api from "./api"; // ✅ import cấu hình API dùng axios baseURL
+import API from "./api";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -7,44 +7,27 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      // ✅ Tự động gọi backend Render hoặc localhost tùy môi trường
-      const res = await api.post("/auth/login", form);
-
-      // ✅ Lưu Access + Refresh Token và thông tin user
+      const res = await API.post("/auth/login", form);
       localStorage.setItem("accessToken", res.data.accessToken);
       localStorage.setItem("refreshToken", res.data.refreshToken);
       localStorage.setItem("user", JSON.stringify(res.data.user));
       localStorage.setItem("role", res.data.user.role);
-
       alert("✅ Đăng nhập thành công!");
-      console.log("Access Token:", res.data.accessToken);
-      console.log("Role:", res.data.user.role);
     } catch (err) {
-      console.error(err);
       alert(err.response?.data?.message || "❌ Lỗi đăng nhập");
     }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("user");
-    localStorage.removeItem("role");
+    localStorage.clear();
     alert("Đăng xuất thành công!");
   };
 
   return (
-    <div style={{ width: "300px", margin: "auto", textAlign: "center" }}>
+    <div style={{ textAlign: "center" }}>
       <h2>🔑 Đăng nhập</h2>
-      <input
-        placeholder="Email"
-        onChange={(e) => setForm({ ...form, email: e.target.value })}
-      /><br />
-      <input
-        type="password"
-        placeholder="Mật khẩu"
-        onChange={(e) => setForm({ ...form, password: e.target.value })}
-      /><br />
+      <input placeholder="Email" onChange={(e) => setForm({ ...form, email: e.target.value })} /><br />
+      <input type="password" placeholder="Mật khẩu" onChange={(e) => setForm({ ...form, password: e.target.value })} /><br />
       <button onClick={handleLogin}>Đăng nhập</button>
       <button onClick={handleLogout}>Đăng xuất</button>
     </div>
