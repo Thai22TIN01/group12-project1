@@ -24,19 +24,31 @@ app.use(helmet());
 app.use(express.json());
 app.use(morgan("dev"));
 
-// ---- CORS cho phép frontend truy cập
-app.use(cors({
-  origin: [
-    "http://localhost:3000",
-    "https://group12-project1-lgwn.vercel.app"
-  ],
-  credentials: true,
-}));
+// ✅ Cấu hình CORS cho phép cả localhost và các domain Vercel
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://group12-project1-hfkd.vercel.app",
+  "https://group12-project1-hfkd-loc2nr3ny-vinhcongles-projects.vercel.app"
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.warn("❌ Blocked by CORS:", origin);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
 
 // ---- Rate limiting (chống spam API)
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 phút
-  max: 100, // mỗi IP chỉ được 100 requests / 15 phút
+  max: 100,
   standardHeaders: true,
   legacyHeaders: false,
   message: {
@@ -53,19 +65,19 @@ mongoose
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
 // ---- Register routes (prefix chuẩn /api/...)
-app.use("/api/users", userRoutes);          // Buổi 4
-app.use("/api/auth", authRoutes);           // Đăng ký / đăng nhập / refresh / logout / forgot / reset
-app.use("/api/profile", profileRoutes);     // Hồ sơ cá nhân
-app.use("/api/admin", adminRoutes);         // Quản trị (Admin)
-app.use("/api/advanced", advancedRoutes);   // Advanced features (RBAC, token, phân quyền)
-app.use("/api/forgot", forgotRoutes);       // Quên mật khẩu (Email reset)
-app.use("/api/upload", uploadRoutes);       // Upload Avatar (Cloudinary)
+app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/profile", profileRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/advanced", advancedRoutes);
+app.use("/api/forgot", forgotRoutes);
+app.use("/api/upload", uploadRoutes);
 
 // ---- Health check route
 app.get("/health", (req, res) => res.json({ status: "ok", time: Date.now() }));
 
 // ---- 404 handler
-app.use((req, res, next) => {
+app.use((req, res) => {
   res.status(404).json({ success: false, message: "Không tìm thấy endpoint." });
 });
 
