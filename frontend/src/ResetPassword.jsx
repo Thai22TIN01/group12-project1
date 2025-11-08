@@ -1,21 +1,24 @@
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import API from "./api";
+import axios from "axios";
 
 export default function ResetPassword() {
-  const [params] = useSearchParams();
-  const token = params.get("token");
-  const email = params.get("email");
-  const [password, setPassword] = useState("");
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
+  const email = searchParams.get("email");
+  const [newPassword, setNewPassword] = useState("");
   const [msg, setMsg] = useState("");
 
   const handleReset = async (e) => {
     e.preventDefault();
     try {
-      const res = await API.post("/auth/reset-password", { email, token, newPassword: password });
+      const res = await axios.post(
+        "https://group12-project1-zrv7.onrender.com/api/auth/reset-password",
+        { email, token, newPassword }
+      );
       setMsg(res.data.message || "✅ Đặt lại mật khẩu thành công!");
-    } catch {
-      setMsg("❌ Lỗi kết nối server!");
+    } catch (err) {
+      setMsg(err.response?.data?.message || "❌ Lỗi kết nối!");
     }
   };
 
@@ -24,7 +27,12 @@ export default function ResetPassword() {
       <h2>🔒 Đặt lại mật khẩu</h2>
       <p>Email: {email}</p>
       <form onSubmit={handleReset}>
-        <input type="password" placeholder="Mật khẩu mới" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <input
+          type="password"
+          placeholder="Nhập mật khẩu mới"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+        /><br />
         <button type="submit">Xác nhận</button>
       </form>
       <p>{msg}</p>
