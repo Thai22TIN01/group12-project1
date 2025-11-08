@@ -7,15 +7,6 @@ const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 
-// ---- Import routes
-const userRoutes = require("./routes/userRoutes");
-const authRoutes = require("./routes/authRoutes");
-const profileRoutes = require("./routes/profileRoutes");
-const adminRoutes = require("./routes/adminRoutes");
-const advancedRoutes = require("./routes/advancedRoutes");
-const forgotRoutes = require("./routes/forgotRoutes");
-const uploadRoutes = require("./routes/uploadRoutes");
-
 const app = express();
 
 // ---- Security middleware
@@ -23,13 +14,11 @@ app.use(helmet());
 app.use(express.json());
 app.use(morgan("dev"));
 
-// ✅ Cấu hình CORS cho phép frontend từ localhost & Vercel truy cập
+// ✅ Cấu hình CORS linh hoạt (hỗ trợ localhost + Vercel)
 const allowedOrigins = [
-  "http://localhost:3000",
-  "https://group12-project1-hfkd.vercel.app",
-  "https://group12-project1-hfkd-loc2nr3ny-vinhcongles-projects.vercel.app",
-  "https://group12-project1-thai22tin01.vercel.app" // thêm domain của Thái
-];
+  "http://localhost:3000", // để test local
+  process.env.FRONTEND_URL, // domain frontend trên Vercel (lấy từ .env)
+].filter(Boolean); // bỏ các giá trị undefined/null
 
 app.use(
   cors({
@@ -63,6 +52,15 @@ mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
+
+// ---- Import routes
+const userRoutes = require("./routes/userRoutes");
+const authRoutes = require("./routes/authRoutes");
+const profileRoutes = require("./routes/profileRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+const advancedRoutes = require("./routes/advancedRoutes");
+const forgotRoutes = require("./routes/forgotRoutes");
+const uploadRoutes = require("./routes/uploadRoutes");
 
 // ---- Register routes
 app.use("/api/users", userRoutes);
