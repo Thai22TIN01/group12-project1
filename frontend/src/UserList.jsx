@@ -4,7 +4,7 @@ import axios from "axios";
 export default function UserList() {
   const [users, setUsers] = useState([]);
   const token = localStorage.getItem("accessToken");
-
+// eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const fetchUsers = async () => {
       try {
