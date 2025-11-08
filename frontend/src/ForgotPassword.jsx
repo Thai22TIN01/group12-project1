@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import api from "./api"; // ✅ import đúng
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -7,7 +8,8 @@ export default function ForgotPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await API.post("/auth/forgot-password", { email });
+      // ✅ đổi "API" -> "api"
+      const res = await api.post("/auth/forgot-password", { email });
       setMsg(res.data.message || "✅ Đã gửi link đặt lại mật khẩu!");
     } catch {
       setMsg("❌ Lỗi kết nối server!");
@@ -18,7 +20,12 @@ export default function ForgotPassword() {
     <div style={{ textAlign: "center" }}>
       <h2>🔑 Quên mật khẩu</h2>
       <form onSubmit={handleSubmit}>
-        <input type="email" placeholder="Nhập email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input
+          type="email"
+          placeholder="Nhập email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
         <button type="submit">Gửi link</button>
       </form>
       <p>{msg}</p>

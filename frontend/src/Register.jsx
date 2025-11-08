@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import api from "./api";
 
 export default function Register() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });

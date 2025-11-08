@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
- // ✅ dùng axios instance đã cấu hình
+import api from "./api";
+
 
 function AddUser() {
   const [name, setName] = useState("");

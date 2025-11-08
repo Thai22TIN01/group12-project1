@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import api from "./api";
 
 export default function UploadAvatar() {
   const [file, setFile] = useState(null);
