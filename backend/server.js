@@ -1,5 +1,4 @@
 // backend/server.js
-// 🟢 server.js — Backend Authentication + Profile + Admin + Advanced + Forgot Password + Upload Avatar
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
@@ -9,13 +8,13 @@ const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 
 // ---- Import routes
-const userRoutes = require("./routes/userRoutes");         // CRUD (Buổi 4)
-const authRoutes = require("./routes/authRoutes");         // Authentication (Hoạt động 1)
-const profileRoutes = require("./routes/profileRoutes");   // Profile (Hoạt động 2)
-const adminRoutes = require("./routes/adminRoutes");       // Admin (Hoạt động 3)
-const advancedRoutes = require("./routes/advancedRoutes"); // Advanced (Hoạt động 4)
-const forgotRoutes = require("./routes/forgotRoutes");     // Quên mật khẩu (Email Reset)
-const uploadRoutes = require("./routes/uploadRoutes");     // Upload Avatar (Hoạt động 6)
+const userRoutes = require("./routes/userRoutes");
+const authRoutes = require("./routes/authRoutes");
+const profileRoutes = require("./routes/profileRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+const advancedRoutes = require("./routes/advancedRoutes");
+const forgotRoutes = require("./routes/forgotRoutes");
+const uploadRoutes = require("./routes/uploadRoutes");
 
 const app = express();
 
@@ -24,11 +23,12 @@ app.use(helmet());
 app.use(express.json());
 app.use(morgan("dev"));
 
-// ✅ Cấu hình CORS cho phép cả localhost và các domain Vercel
+// ✅ Cấu hình CORS cho phép frontend từ localhost & Vercel truy cập
 const allowedOrigins = [
   "http://localhost:3000",
   "https://group12-project1-hfkd.vercel.app",
-  "https://group12-project1-hfkd-loc2nr3ny-vinhcongles-projects.vercel.app"
+  "https://group12-project1-hfkd-loc2nr3ny-vinhcongles-projects.vercel.app",
+  "https://group12-project1-thai22tin01.vercel.app" // thêm domain của Thái
 ];
 
 app.use(
@@ -64,7 +64,7 @@ mongoose
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// ---- Register routes (prefix chuẩn /api/...)
+// ---- Register routes
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
@@ -73,7 +73,8 @@ app.use("/api/advanced", advancedRoutes);
 app.use("/api/forgot", forgotRoutes);
 app.use("/api/upload", uploadRoutes);
 
-// ---- Health check route
+// ---- Health check
+app.get("/", (req, res) => res.send("✅ Backend is running fine!"));
 app.get("/health", (req, res) => res.json({ status: "ok", time: Date.now() }));
 
 // ---- 404 handler
